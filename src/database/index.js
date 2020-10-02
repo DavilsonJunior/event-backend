@@ -1,13 +1,12 @@
 import Sequelize from 'sequelize';
 
-import { isThursday } from 'date-fns';
 import User from '../app/models/User';
-import Event from '../app/models/Event';
-import EventUser from '../app/models/EventUser';
+// import Event from '../app/models/Event';
+// import EventUser from '../app/models/EventUser';
 
 import databaseConfig from '../config/database';
 
-const models = [User, Event, EventUser];
+const models = [User];
 
 class Database {
   constructor() {
