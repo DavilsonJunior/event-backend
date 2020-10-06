@@ -26,7 +26,8 @@ routes.delete('/events/:idevent', EventController.delete);
  * usuario se cadastrando num evento de outro
  */
 
-routes.get('/events/user/registered', EventUserController.index);
+routes.get('/events/user/registered', EventUserController.show);
+routes.get('/events/registered', EventUserController.index);
 routes.post('/events/:idevent/register', EventUserController.store);
 
 export default routes;

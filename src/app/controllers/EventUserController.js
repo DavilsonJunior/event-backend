@@ -11,7 +11,44 @@ class EventUserController {
     }
 
     const EventUserRegistered = await EventUser.findAll({
+      include: [
+        {
+          model: Event,
+          as: 'event',
+          attributes: ['id', 'description', 'start_date', 'end_date'],
+        },
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'name'],
+        },
+      ],
+    });
+
+    return res.json(EventUserRegistered);
+  }
+
+  async show(req, res) {
+    const userExists = await User.findByPk(req.userId);
+
+    if (!userExists) {
+      return res.status(400).json({ error: 'User does not exists' });
+    }
+
+    const EventUserRegistered = await EventUser.findAll({
       where: { user_id: req.userId },
+      include: [
+        {
+          model: Event,
+          as: 'event',
+          attributes: ['id', 'description', 'start_date', 'end_date'],
+        },
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'name'],
+        },
+      ],
     });
 
     return res.json(EventUserRegistered);

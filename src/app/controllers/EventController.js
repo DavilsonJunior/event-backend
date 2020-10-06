@@ -3,6 +3,7 @@ import { parseISO, startOfHour, isBefore } from 'date-fns';
 
 import User from '../models/User';
 import Event from '../models/Event';
+import EventUser from '../models/EventUser';
 
 class EventController {
   async show(req, res) {
@@ -12,7 +13,7 @@ class EventController {
       return res.status(400).json({ error: 'User does not exists' });
     }
 
-    const events = await Event.findOne({ where: { user_id: req.userId } });
+    const events = await Event.findAll({ where: { user_id: req.userId } });
 
     return res.json(events);
   }
@@ -61,6 +62,11 @@ class EventController {
       start_date,
       end_date,
       user_id: req.userId,
+    });
+
+    await EventUser.create({
+      user_id: req.userId,
+      event_id: event.id,
     });
 
     return res.json(event);
