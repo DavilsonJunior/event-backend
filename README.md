@@ -5,7 +5,7 @@
 # Event
 
 Projeto desenvolvido para processo seletivo
-Trata-se de uma aplicação web (backen e frontend)
+Trata-se de uma aplicação web
 
 # Guia
   
@@ -35,7 +35,7 @@ Instalando as dependências do backend da aplicação:
 
 ```bash
 npm install ou yarn install```
-
+```
 
 ## Tecnologias
 
