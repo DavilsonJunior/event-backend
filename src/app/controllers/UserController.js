@@ -23,13 +23,15 @@ class UserController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
+      return res
+        .status(400)
+        .json({ error: 'Por favor! Preencha todos os dados corretamente.' });
     }
 
     const userExists = await User.findOne({ where: { email: req.body.email } });
 
     if (userExists) {
-      return res.status(400).json({ error: 'User already exists.' });
+      return res.status(400).json({ error: 'Usuário ja existe.' });
     }
 
     const { id, name, email } = await User.create(req.body);

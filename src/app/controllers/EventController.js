@@ -10,10 +10,12 @@ class EventController {
     const userExists = await User.findByPk(req.userId);
 
     if (!userExists) {
-      return res.status(400).json({ error: 'User does not exists' });
+      return res.status(400).json({ error: 'Usuário não existe' });
     }
 
-    const events = await Event.findAll({ where: { user_id: req.userId } });
+    const events = await Event.findAll({
+      where: { user_id: req.userId, canceled_at: null },
+    });
 
     return res.json(events);
   }
@@ -32,7 +34,9 @@ class EventController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
+      return res
+        .status(400)
+        .json({ error: 'Por favor! Preencha todos os dados corretamente.' });
     }
 
     const { description, date_initial, date_final } = req.body;
@@ -43,8 +47,7 @@ class EventController {
 
     if (eventExist) {
       return res.status(401).json({
-        error:
-          'You can`t create a event with this name. It events already exists.',
+        error: 'Voce nao pode criar eventos com o mesmo nome!',
       });
     }
 
@@ -54,7 +57,9 @@ class EventController {
     const hourStart = startOfHour(start_date);
 
     if (isBefore(hourStart, new Date())) {
-      return res.status(400).json({ error: 'past date are not permitted' });
+      return res
+        .status(400)
+        .json({ error: 'Datas no passado não são permitidas' });
     }
 
     const event = await Event.create({
@@ -75,25 +80,35 @@ class EventController {
   async update(req, res) {
     const schema = Yup.object().shape({
       description: Yup.string(),
-      start_date: Yup.date(),
-      end_date: Yup.string(),
+      date_initial: Yup.date(),
+      date_final: Yup.date(),
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
+      return res
+        .status(400)
+        .json({ error: 'Por favor! Preencha todos os dados corretamente.' });
     }
 
     const userExists = await User.findByPk(req.userId);
 
     if (!userExists) {
-      return res.status(400).json({ error: 'User does not exists' });
+      return res.status(400).json({ error: 'Usuário não existe' });
     }
+
+    const { description, date_initial, date_final } = req.body;
+
+    const start_date = parseISO(date_initial);
+    const end_date = parseISO(date_final);
 
     const { idevent } = req.params;
 
-    await Event.update(req.body, {
-      where: { id: idevent, user_id: req.userId },
-    });
+    await Event.update(
+      { description, start_date, end_date },
+      {
+        where: { id: idevent, user_id: req.userId },
+      }
+    );
 
     const events = await Event.findByPk(idevent);
 
@@ -104,15 +119,17 @@ class EventController {
     const userExists = await User.findByPk(req.userId);
 
     if (!userExists) {
-      return res.status(400).json({ error: 'User does not exists' });
+      return res.status(400).json({ error: 'Usuário não existe' });
     }
 
     const { idevent } = req.params;
 
+    await EventUser.destroy({ where: { event_id: idevent } });
+
     const event = await Event.findByPk(idevent);
 
     if (!event) {
-      return res.status(400).json({ error: 'Event does not exists' });
+      return res.status(400).json({ error: 'Esse evento não existe' });
     }
 
     event.canceled_at = new Date();

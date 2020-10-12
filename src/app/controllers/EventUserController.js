@@ -7,7 +7,7 @@ class EventUserController {
     const userExists = await User.findByPk(req.userId);
 
     if (!userExists) {
-      return res.status(400).json({ error: 'User does not exists' });
+      return res.status(400).json({ error: 'Usuário não existe' });
     }
 
     const EventUserRegistered = await EventUser.findAll({
@@ -32,7 +32,7 @@ class EventUserController {
     const userExists = await User.findByPk(req.userId);
 
     if (!userExists) {
-      return res.status(400).json({ error: 'User does not exists' });
+      return res.status(400).json({ error: 'Usuário não existe' });
     }
 
     const EventUserRegistered = await EventUser.findAll({
@@ -60,13 +60,13 @@ class EventUserController {
     const userExists = await User.findByPk(req.userId);
 
     if (!userExists) {
-      return res.status(400).json({ error: 'User does not exists' });
+      return res.status(400).json({ error: 'Usuário não existe' });
     }
 
     const eventExist = await Event.findByPk(idevent);
 
     if (!eventExist) {
-      return res.status(400).json({ error: 'Event does not exists' });
+      return res.status(400).json({ error: 'Esse evento não existe' });
     }
 
     const eventUser = await EventUser.create({
